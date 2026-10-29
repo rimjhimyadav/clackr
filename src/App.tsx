@@ -19,7 +19,7 @@ export default function App() {
   }, [theme]);
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-5 sm:px-8">
+    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col overflow-x-clip px-4 sm:px-8">
       <Header />
       <main className="flex-1">
         <Routes>

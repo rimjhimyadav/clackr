@@ -1,6 +1,6 @@
 import { ChevronRight, Crosshair, Ghost, RotateCcw, Trophy } from "lucide-react";
 import type { Result } from "../types";
-import { ghostSamples, heatmap, modeLabel, weakestKeys } from "../lib/stats";
+import { ghostSamples, heatmap, missedKeys, modeLabel } from "../lib/stats";
 import Chart from "./Chart";
 import Keyboard from "./Keyboard";
 
@@ -17,7 +17,7 @@ const button = "flex cursor-pointer items-center gap-2 rounded-xl px-4 py-2.5 te
 
 export default function Results({ result, best, ghost, onNext, onRepeat, onPractice }: Props) {
   const isBest = result.wpm > best && best > 0;
-  const weak = weakestKeys(result.keys, 3);
+  const missed = missedKeys(result.keys);
   const small = [
     { label: "raw", value: result.raw },
     { label: "consistency", value: `${result.consistency}%` },
@@ -65,7 +65,7 @@ export default function Results({ result, best, ghost, onNext, onRepeat, onPract
 
       <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
         {small.map((stat) => (
-          <div key={stat.label} className="rounded-xl bg-panel px-4 py-3">
+          <div key={stat.label} className="rounded-xl bg-panel px-4 py-3 last:col-span-2 sm:last:col-span-1">
             <p className="text-xs text-sub">{stat.label}</p>
             <p className="mt-0.5 font-mono text-lg font-semibold">{stat.value}</p>
           </div>
@@ -75,8 +75,8 @@ export default function Results({ result, best, ghost, onNext, onRepeat, onPract
       <div className="mt-10">
         <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-sub">
           Keys you missed
-          {weak.length === 0 && <span className="text-text">none, clean run</span>}
-          {weak.map((key) => (
+          {missed.length === 0 && <span className="text-text">none, clean run</span>}
+          {missed.map((key) => (
             <kbd key={key} className="keycap rounded-md px-2 py-0.5 font-mono text-text">
               {key}
             </kbd>
@@ -94,7 +94,7 @@ export default function Results({ result, best, ghost, onNext, onRepeat, onPract
           <RotateCcw size={15} />
           Repeat
         </button>
-        {weak.length > 0 && (
+        {missed.length > 0 && (
           <button type="button" onClick={onPractice} className={`${button} bg-panel hover:text-accent`}>
             <Crosshair size={15} />
             Practice weak keys

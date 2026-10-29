@@ -1,4 +1,4 @@
-import { useState, type PointerEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 
 type Series = {
   label: string;
@@ -14,10 +14,8 @@ type Props = {
   xLabel?: (index: number) => string;
 };
 
-const WIDTH = 640;
 const HEIGHT = 220;
-const PAD = { left: 34, right: 10, top: 12, bottom: 26 };
-const INNER_W = WIDTH - PAD.left - PAD.right;
+const PAD = { left: 34, right: 14, top: 12, bottom: 26 };
 const INNER_H = HEIGHT - PAD.top - PAD.bottom;
 
 // round up so all 4 lines on the axis get round numbers
@@ -28,13 +26,29 @@ function niceMax(value: number) {
 
 export default function Chart({ series, errors = [], xLabel = (i) => String(i + 1) }: Props) {
   const [hover, setHover] = useState<number | null>(null);
+  const [width, setWidth] = useState(640);
+  const boxRef = useRef<HTMLDivElement>(null);
+
+  // the svg is drawn at its real width, so the labels stay the same size on phones
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box) return;
+    const observer = new ResizeObserver(([entry]) => setWidth(Math.round(entry.contentRect.width)));
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, []);
+
+  const WIDTH = width;
+  const INNER_W = WIDTH - PAD.left - PAD.right;
   const count = Math.max(...series.map((line) => line.values.length));
   const max = niceMax(Math.max(...series.flatMap((line) => line.values)));
 
   const x = (i: number) => PAD.left + (count === 1 ? INNER_W / 2 : (i / (count - 1)) * INNER_W);
   const y = (value: number) => PAD.top + INNER_H - (value / max) * INNER_H;
   const path = (values: number[]) => values.map((value, i) => `${i ? "L" : "M"}${x(i)},${y(value)}`).join(" ");
-  const step = Math.ceil(count / 8);
+  const step = Math.ceil(count / Math.max(2, Math.floor(INNER_W / 55)));
+  // the last label always shows, so skip the one before it if they'd touch
+  const showLabel = (i: number) => i === count - 1 || (i % step === 0 && count - 1 - i >= step / 2);
 
   function handlePointer(event: PointerEvent<SVGSVGElement>) {
     const box = event.currentTarget.getBoundingClientRect();
@@ -46,7 +60,7 @@ export default function Chart({ series, errors = [], xLabel = (i) => String(i + 
   if (count === 0) return null;
 
   return (
-    <div className="relative">
+    <div ref={boxRef} className="relative">
       <svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} className="w-full touch-none overflow-visible" onPointerMove={handlePointer} onPointerLeave={() => setHover(null)}>
         <defs>
           <linearGradient id="area" x1="0" x2="0" y1="0" y2="1">
@@ -64,7 +78,7 @@ export default function Chart({ series, errors = [], xLabel = (i) => String(i + 
           </g>
         ))}
         {Array.from({ length: count }, (_, i) =>
-          i % step === 0 || i === count - 1 ? (
+          showLabel(i) ? (
             <text key={i} x={x(i)} y={HEIGHT - 6} textAnchor="middle" className="fill-sub font-mono text-[11px]">
               {xLabel(i)}
             </text>

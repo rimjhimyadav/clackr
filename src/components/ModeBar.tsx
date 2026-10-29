@@ -22,35 +22,39 @@ export default function ModeBar({ settings, onChange }: Props) {
   const current = settings.mode === "time" ? settings.time : settings.words;
 
   return (
-    <div className="mx-auto flex w-fit flex-wrap items-center justify-center gap-1 rounded-xl bg-panel px-2 py-1.5 font-mono text-sm text-sub">
-      {MODES.map(({ mode, label, icon: Icon }) => (
-        <button key={mode} type="button" onClick={() => onChange({ mode })} className={`flex items-center gap-1.5 ${option(settings.mode === mode)}`}>
-          <Icon size={14} />
-          {label}
-        </button>
-      ))}
-      {amounts.length > 0 && <span className="mx-1 h-5 w-1 rounded-full bg-bg" />}
-      {amounts.map((amount) => (
+    <div className="mx-auto flex w-fit flex-wrap items-center justify-center gap-x-1 gap-y-1 rounded-xl bg-panel px-2 py-1.5 font-mono text-sm text-sub">
+      <div className="flex flex-wrap justify-center">
+        {MODES.map(({ mode, label, icon: Icon }) => (
+          <button key={mode} type="button" onClick={() => onChange({ mode })} className={`flex items-center gap-1.5 ${option(settings.mode === mode)}`}>
+            <Icon size={14} />
+            {label}
+          </button>
+        ))}
+      </div>
+      <span className="mx-1 hidden h-5 w-1 rounded-full bg-bg sm:block" />
+      <div className="flex items-center">
+        {amounts.map((amount) => (
+          <button
+            key={amount}
+            type="button"
+            onClick={() => onChange(settings.mode === "time" ? { time: amount } : { words: amount })}
+            className={option(current === amount)}
+          >
+            {amount}
+          </button>
+        ))}
+        {amounts.length > 0 && <span className="mx-1 h-5 w-1 rounded-full bg-bg" />}
         <button
-          key={amount}
           type="button"
-          onClick={() => onChange(settings.mode === "time" ? { time: amount } : { words: amount })}
-          className={option(current === amount)}
+          onClick={() => onChange({ ghost: !settings.ghost })}
+          aria-pressed={settings.ghost}
+          title="Race a ghost of your best run"
+          className={`flex items-center gap-1.5 ${option(settings.ghost)}`}
         >
-          {amount}
+          <Ghost size={14} />
+          ghost
         </button>
-      ))}
-      <span className="mx-1 h-5 w-1 rounded-full bg-bg" />
-      <button
-        type="button"
-        onClick={() => onChange({ ghost: !settings.ghost })}
-        aria-pressed={settings.ghost}
-        title="Race a ghost of your best run"
-        className={`flex items-center gap-1.5 ${option(settings.ghost)}`}
-      >
-        <Ghost size={14} />
-        ghost
-      </button>
+      </div>
     </div>
   );
 }

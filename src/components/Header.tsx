@@ -26,9 +26,9 @@ export default function Header() {
   }, [themesOpen]);
 
   return (
-    <header className="flex flex-wrap items-center gap-x-6 gap-y-3 py-6">
+    <header className="flex flex-wrap items-center gap-x-6 gap-y-2 py-5 sm:py-6">
       <Logo />
-      <nav className="flex gap-1">
+      <nav className="order-last -ml-2.5 flex w-full gap-1 sm:order-none sm:ml-0 sm:w-auto">
         <NavLink to="/" end className={({ isActive }) => `${button} ${isActive ? "text-text" : ""}`}>
           <Keyboard size={17} />
           Test
@@ -43,17 +43,18 @@ export default function Header() {
         <button
           type="button"
           onClick={() => updateSettings({ sound: SOUNDS[(SOUNDS.indexOf(settings.sound) + 1) % SOUNDS.length] })}
-          title="Change key sound"
+          title={`Key sound: ${settings.sound}`}
+          aria-label={`Key sound: ${settings.sound}`}
           className={button}
         >
           {settings.sound === "off" ? <VolumeX size={17} /> : <Volume2 size={17} />}
-          {settings.sound}
+          <span className="hidden sm:inline">{settings.sound}</span>
         </button>
 
         <div ref={themesRef} className="relative">
-          <button type="button" onClick={() => setThemesOpen(!themesOpen)} aria-expanded={themesOpen} className={button}>
+          <button type="button" onClick={() => setThemesOpen(!themesOpen)} aria-expanded={themesOpen} aria-label="Theme" className={button}>
             <Palette size={17} />
-            {settings.theme}
+            <span className="hidden sm:inline">{settings.theme}</span>
           </button>
           {themesOpen && (
             <div className="absolute top-full right-0 z-20 mt-2 w-44 rounded-xl bg-panel p-1.5 shadow-xl">

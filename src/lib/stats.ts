@@ -104,6 +104,15 @@ export function weakestKeys(stats: KeyStats, count = 4) {
     .map(([key]) => key);
 }
 
+// keys you missed in one test, most misses first
+export function missedKeys(stats: KeyStats, count = 3) {
+  return Object.entries(stats)
+    .filter(([, { misses }]) => misses > 0)
+    .sort(([, a], [, b]) => b.misses - a.misses || b.misses / b.hits - a.misses / a.hits)
+    .slice(0, count)
+    .map(([key]) => key);
+}
+
 // miss rate of every key from 0 to 1, where 1 is your worst key
 export function heatmap(stats: KeyStats) {
   const rates = Object.entries(stats).map(([key, { hits, misses }]) => [key, misses / hits] as const);

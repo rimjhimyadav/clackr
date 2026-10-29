@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { HistoryEntry } from "../types";
 import { newTest, typeChar } from "./engine";
 import { keyFor } from "./keyboard";
-import { buildResult, consistency, ghostAt, ghostSamples, heatmap, personalBest, progressTimeline, weakestKeys, wordsPerMinute } from "./stats";
+import { buildResult, consistency, ghostAt, missedKeys, ghostSamples, heatmap, personalBest, progressTimeline, weakestKeys, wordsPerMinute } from "./stats";
 
 describe("speed", () => {
   it("counts 5 characters as a word", () => {
@@ -52,6 +52,7 @@ describe("keys", () => {
     const stats = { a: { hits: 20, misses: 1 }, q: { hits: 10, misses: 5 }, z: { hits: 2, misses: 2 }, ";": { hits: 9, misses: 9 } };
     expect(weakestKeys(stats)).toEqual(["q", "a"]);
     expect(heatmap(stats).q).toBe(0.5);
+    expect(missedKeys(stats)).toEqual([";", "q", "z"]);
   });
 });
 

@@ -7,7 +7,7 @@ export default function Logo() {
         <span
           key={i}
           style={{ transitionDelay: `${i * 40}ms` }}
-          className={`keycap grid size-8 place-items-center rounded-md font-mono text-base font-bold group-hover:translate-y-[3px] group-hover:shadow-[0_1px_0_var(--key-edge)] ${
+          className={`keycap grid size-7 place-items-center rounded-md font-mono text-sm sm:size-8 sm:text-base font-bold group-hover:translate-y-[3px] group-hover:shadow-[0_1px_0_var(--key-edge)] ${
             i === 0 ? "text-accent" : "text-text"
           }`}
         >
