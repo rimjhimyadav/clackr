@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A typing test with a live speed chart, a heatmap of the keys you miss and practice tests made from your weakest keys." />
+    <title>Clackr | Typing test</title>
+    <script>
+      // set the saved theme before the page shows, so the colors don't flash
+      try {
+        const saved = JSON.parse(localStorage.getItem("clackr"));
+        document.documentElement.dataset.theme = saved.state.settings.theme;
+      } catch {
+        document.documentElement.dataset.theme = "paper";
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

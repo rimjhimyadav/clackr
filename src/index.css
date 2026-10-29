@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-key: var(--key);
+  --color-key-edge: var(--key-edge);
+  --color-text: var(--text);
+  --color-sub: var(--sub);
+  --color-accent: var(--accent);
+  --color-error: var(--error);
+}
+
+:root,
+[data-theme="paper"] {
+  --bg: #f3eee4;
+  --panel: #ebe4d6;
+  --key: #fbf8f2;
+  --key-edge: #d3c9b7;
+  --text: #2b2722;
+  --sub: #aaa192;
+  --accent: #e2603b;
+  --error: #c93a3a;
+}
+
+[data-theme="midnight"] {
+  color-scheme: dark;
+  --bg: #15171c;
+  --panel: #1c1f26;
+  --key: #272b34;
+  --key-edge: #0f1115;
+  --text: #e4e6eb;
+  --sub: #5c6373;
+  --accent: #7cc4ff;
+  --error: #ff6b6b;
+}
+
+[data-theme="matcha"] {
+  color-scheme: dark;
+  --bg: #1e2520;
+  --panel: #242d26;
+  --key: #303c32;
+  --key-edge: #141a15;
+  --text: #e3ecd9;
+  --sub: #6b7e6d;
+  --accent: #a8d38d;
+  --error: #f08a7e;
+}
+
+[data-theme="retro"] {
+  --bg: #d9d4c7;
+  --panel: #cfc9ba;
+  --key: #ece8de;
+  --key-edge: #a39c8b;
+  --text: #2f2c27;
+  --sub: #8a8475;
+  --accent: #3f6fa8;
+  --error: #c0392b;
+}
+
+[data-theme="sakura"] {
+  --bg: #fdeef0;
+  --panel: #f9e2e6;
+  --key: #fffafb;
+  --key-edge: #e6c3cb;
+  --text: #4a2f37;
+  --sub: #c39aa5;
+  --accent: #e0607e;
+  --error: #c43b3b;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* a keycap: the face sits on a darker edge, and sinks into it when pressed */
+.keycap {
+  background-color: var(--key);
+  box-shadow:
+    0 4px 0 var(--key-edge),
+    0 5px 8px rgb(0 0 0 / 0.08);
+  transition:
+    transform 70ms,
+    box-shadow 70ms,
+    background-color 0.2s;
+}
+
+.keycap.down {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--key-edge);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
